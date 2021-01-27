@@ -63,7 +63,7 @@ const OpenOriginalNetworkButton = props => {
   return (
     <Tooltip
       disableFocusListener
-      title="Open original network in new browser window"
+      title="View source network in NDEx"
       placement="bottom"
     >
       <div>

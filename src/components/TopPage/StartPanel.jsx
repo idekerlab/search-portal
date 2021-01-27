@@ -10,7 +10,7 @@ import './style.css'
 const feedbackURL = 'https://home.ndexbio.org/contact-us/'
 
 // TODO: move this to a global property
-const APP_VERSION = 'v1.0'
+const APP_VERSION = 'v1.1'
 
 const StartPanel = props => {
   useEffect(() => {

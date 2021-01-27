@@ -49,11 +49,11 @@ const CytoscapeViewer = (props) => {
     name: 'preset',
     padding: 6,
     animate: false,
-    positions: function(node) {
+    positions: function (node) {
       const id = node[0]._private.data.id;
-      const analog = originalElements.filter((elem) => {
+      const analog = originalElements ? originalElements.filter((elem) => {
         return elem.data.id.toString() === id.toString();
-      });
+      }) : [{position:null}];
       const position = analog[0].position;
       return position;
     },
@@ -107,7 +107,7 @@ const CytoscapeViewer = (props) => {
 
     // Background tapped: Remove selection
     // (This is the standard Cytosape UX)
-    cyInstance.on('tap', function(event) {
+    cyInstance.on('tap', function (event) {
       try {
         if (event.target === cyInstance) {
           props.networkActions.unselectEdges();
@@ -150,7 +150,7 @@ const CytoscapeViewer = (props) => {
       }, 1);
     };
 
-    cyInstance.on('tap', 'node', function() {
+    cyInstance.on('tap', 'node', function () {
       try {
         cyInstance.nodes().removeClass('connected');
       } catch (e) {
@@ -159,7 +159,7 @@ const CytoscapeViewer = (props) => {
       selectNode();
     });
 
-    cyInstance.on('tap', 'edge', function() {
+    cyInstance.on('tap', 'edge', function () {
       try {
         cyInstance.nodes().removeClass('connected');
         const selected = this.data();
@@ -171,7 +171,7 @@ const CytoscapeViewer = (props) => {
       selectEdge();
     });
 
-    cyInstance.on('boxend', function(event) {
+    cyInstance.on('boxend', function (event) {
       selectEdge();
       selectNode();
     });
@@ -201,7 +201,7 @@ const CytoscapeViewer = (props) => {
       }
     }
 
-    new Promise(function(resolve, reject) {
+    new Promise(function (resolve, reject) {
       renderAnnotations();
       resolve();
     }).then(() => {
@@ -230,31 +230,41 @@ const CytoscapeViewer = (props) => {
     const selected = cyInstance.elements('node[name = "' + targets[0] + '"]');
 
     if (selected.length !== 0) {
-      cyInstance.animate(
-        {
-          zoom: 2,
-          center: {
-            eles: selected[0],
+      try {
+        cyInstance.animate(
+          {
+            zoom: 2,
+            center: {
+              eles: selected[0],
+            },
           },
-        },
-        {
-          duration: 500,
-        }
-      );
+          {
+            duration: 500,
+          }
+        );
+      }
+      catch (err) {
+        console.log('Caught cyInstance animate error ', err)
+      }
     }
 
     if (targets.length === 0) {
-      cyInstance.animate(
-        {
-          fit: {
-            eles: cyInstance.elements(),
-            padding: 6,
+      try {
+        cyInstance.animate(
+          {
+            fit: {
+              eles: cyInstance.elements(),
+              padding: 6,
+            },
           },
-        },
-        {
-          duration: 500,
-        }
-      );
+          {
+            duration: 500,
+          }
+        );
+      }
+      catch (err) {
+        console.log('Caught cyInstance animate error', err)
+      }
     }
   }, [props.search.selectedGenes]);
 
@@ -292,7 +302,7 @@ const CytoscapeViewer = (props) => {
     }
   }, [props.uiState.layout]);
 
-  if (originalElements.length > MAX_NETWORK_SIZE) {
+  if (originalElements && originalElements.length > MAX_NETWORK_SIZE) {
     return <Warning {...props} />;
   }
 
@@ -314,6 +324,7 @@ const CytoscapeViewer = (props) => {
     if (layout === COSE_LAYOUT || layout === CONCENTRIC_LAYOUT) {
       layout.stop = () => {
         setTimeout(() => {
+          try {
           cyInstance.animate(
             {
               fit: {
@@ -325,6 +336,9 @@ const CytoscapeViewer = (props) => {
               duration: 0,
             }
           );
+          } catch (err) {
+            console.log('Caught cyInstance animate error ', err);
+          }
         }, 0);
       };
     }

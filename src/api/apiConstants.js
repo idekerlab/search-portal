@@ -11,6 +11,17 @@ export const BASE_URL = SERVICE_SERVER_URL + 'integratedsearch/v1/';
 export const GOOGLE_CLIENT_ID =
   '802839698598-8rsr8va0bd0e6lmi0ghemtrvldk9rnla.apps.googleusercontent.com';
 
+/* test */
+/*
+//Server URL
+export const SERVICE_SERVER_URL = 'http://test.ndexbio.org/';
+//Its endpoint
+export const BASE_URL = SERVICE_SERVER_URL + 'integratedsearch/v1/';
+//Save to NDEx google SSO client ID
+export const GOOGLE_CLIENT_ID =
+  '802839698598-shh458t46bo9v2v5iolcvk1h443hid6n.apps.googleusercontent.com';
+*/
+
 /* dev */
 /*
 //Server URL
